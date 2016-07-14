@@ -13,19 +13,6 @@
  #define PRINT(...)
 #endif
 
-/* information about threads */
-struct tcb { 
-  void *sp;  /* Address of stack pointer. 
-  	      * Keep this as first element would ease switch.S 
-	      * You can do something else as well. 
-	      */
-
-  int registers[32]=0;  
-  /* you will need others stuff */ 
-};
-
-typedef struct tcb tcb_t;
-typedef struct tcb *TCB;
 
 /**
  * assembly code for switching 
@@ -45,8 +32,8 @@ void switch_threads(tcb_t *newthread /* addr. of new TCB */,
 
 
 
-
-
+  struct queue Q;
+  int Qinitzed = 0;
 /** end of data structures */
 
 
@@ -99,6 +86,10 @@ int create_thread(void (*ip)(void)) {
 	long int  *stack; 
 	stack = malloc_stack();
 	if(!stack) return -1; /* no memory? */
+	if(!Qinitzed){
+        	queueCreate(&Q);
+        	Qinitzed = 1;
+  	}
 
   /**
    * Stack layout: last slot should contain the return address and I should have some space 
@@ -107,11 +98,26 @@ int create_thread(void (*ip)(void)) {
    * most element in the stack should be return ip. So we create a stack with the address of the function 
    * we want to run at this slot. 
    */
-
+	*(stack) = (long int) ip;
+//	tcb_t tcbtemp;
+	TCB newtcb = malloc(sizeof(tcb_t));
+//	*newtcb = tcbtemp;
+	newtcb->sp = stack;
+//	int i = 0;
+//	for(;i<16;i++)
+//		(newtcb->registers)[i] = 0;
+	enqueue(&Q, newtcb);	
+	yield();
 	return 0;
 }
 
 void yield(){
+
+  
+  TCB old = dequeue(&Q);
+  enqueue(&Q, old);
+  TCB new = queuePeek(&Q);
+  switch_threads(new, old);
   /* thread wants to give up the CPUjust call the scheduler to pick the next thread. */
 
 }

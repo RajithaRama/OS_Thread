@@ -1,17 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include "quelinked.h"
-
-struct linkedNode {
-	char data;
-	struct linkedNode * next;
-};
-
-struct queue{
-	struct linkedNode * front;
-	
-};
-
+/*
 int main(){
 	struct queue Q;
 	queueCreate(&Q);
@@ -22,7 +12,7 @@ int main(){
 	queueDestroy(&Q);	
 	return 0;
 }
-
+*/
 void queueCreate(struct queue * Q){
 	(Q->front) = NULL;
 }
@@ -39,7 +29,7 @@ int delLink(struct linkedNode **  head){
 	return 0;
 }
 
-void enqueue(struct queue * Q, char val){
+void enqueue(struct queue * Q, TCB val){
 	struct linkedNode * node = malloc(sizeof(struct linkedNode));
 	node -> data = val;
 	node -> next = NULL;
@@ -54,16 +44,16 @@ void enqueue(struct queue * Q, char val){
 	}
 }
 
-char dequeue(struct queue * Q){
+TCB dequeue(struct queue * Q){
 	struct linkedNode * head = (Q->front);
 	if(head==NULL) return NULL;
-	char temp = head -> data;
+	TCB temp = head -> data;
 	Q->front = head->next;
 	free(head);
 	return temp;
 }
 
-char queuePeek(struct queue *Q){
+TCB queuePeek(struct queue *Q){
 	return (Q->front)->data ; 
 }
 
