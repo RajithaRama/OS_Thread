@@ -8,8 +8,9 @@ machine_switch:
 	# restore all required registred from the new tcb
 	# then when you return, you should get to the new thread 
 
-	movq	(%rdi), %rdi
-	pushq	%rdi
+	movq	(%rdi), %rax
+	addq	$72, %rax
+	pushq	%rax
 
 	subq	$72, %rsp
 	//movq	%rax, -8(%rsp)
@@ -32,7 +33,7 @@ machine_switch:
 	
 
 	
-	movq	%rdi, %rsp
+	movq	(%rdi), %rsp
 	
 
 	//movq	-8(%rsp), %rax

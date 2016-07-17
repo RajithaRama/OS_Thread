@@ -98,11 +98,11 @@ int create_thread(void (*ip)(void)) {
    * most element in the stack should be return ip. So we create a stack with the address of the function 
    * we want to run at this slot. 
    */
-	*(stack) = (long int) ip;
+	*(stack) = (long int) ip-72;
 //	tcb_t tcbtemp;
 	TCB newtcb = malloc(sizeof(tcb_t));
 //	*newtcb = tcbtemp;
-	newtcb->sp = stack;
+	newtcb->sp = (void*)*stack;
 //	int i = 0;
 //	for(;i<16;i++)
 //		(newtcb->registers)[i] = 0;

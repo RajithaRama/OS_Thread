@@ -7,7 +7,7 @@ struct tcb {
               * You can do something else as well. 
               */
 
-  long long int registers[16];
+  //long long int registers[16];
   /* you will need others stuff */
 };
 
