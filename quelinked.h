@@ -2,7 +2,7 @@
 #define __QUE__
 
 struct tcb {
-  void *sp;  /* Address of stack pointer. 
+  void * sp;  /* Address of stack pointer. 
               * Keep this as first element would ease switch.S 
               * You can do something else as well. 
               */

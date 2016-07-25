@@ -32,7 +32,8 @@ void switch_threads(tcb_t *newthread /* addr. of new TCB */,
 
 
 
-  struct queue Q;
+  struct queue Que;
+  struct queue * Q = &Que;
   int Qinitzed = 0;
 /** end of data structures */
 
@@ -87,7 +88,7 @@ int create_thread(void (*ip)(void)) {
 	stack = malloc_stack();
 	if(!stack) return -1; /* no memory? */
 	if(!Qinitzed){
-        	queueCreate(&Q);
+        	queueCreate(Q);
         	Qinitzed = 1;
   	}
 
@@ -98,25 +99,19 @@ int create_thread(void (*ip)(void)) {
    * most element in the stack should be return ip. So we create a stack with the address of the function 
    * we want to run at this slot. 
    */
-	*(stack) = (long int) ip-72;
-//	tcb_t tcbtemp;
+	*(stack) = (long int) ip;
 	TCB newtcb = malloc(sizeof(tcb_t));
-//	*newtcb = tcbtemp;
-	newtcb->sp = (void*)*stack;
-//	int i = 0;
-//	for(;i<16;i++)
-//		(newtcb->registers)[i] = 0;
-	enqueue(&Q, newtcb);	
-	yield();
+	newtcb->sp = (void *) stack-64;
+	enqueue(Q, newtcb);	
 	return 0;
 }
 
 void yield(){
 
   
-  TCB old = dequeue(&Q);
-  enqueue(&Q, old);
-  TCB new = queuePeek(&Q);
+  TCB old = dequeue(Q);
+  enqueue(Q, old);
+  TCB new = queuePeek(Q);
   switch_threads(new, old);
   /* thread wants to give up the CPUjust call the scheduler to pick the next thread. */
 
@@ -128,9 +123,16 @@ void delete_thread(void){
   /* When a user-level thread calls this you should not 
    * let it run any more but let others run
    * make sure to exit when all user-level threads are dead */ 
-  
-	   
-  assert(!printf("Implement %s",__func__));
+  TCB old = dequeue(Q);
+	free(old);
+	if(queueIsEmpty(Q)) exit(0);
+	else {
+		TCB temp = malloc(sizeof(tcb_t));
+		TCB new = queuePeek(Q);
+  		switch_threads(new, temp);
+		free(temp);
+	} 
+  //assert(!printf("Implement %s",__func__));
 }
 
 
@@ -139,8 +141,10 @@ void stop_main(void)
   /* Main function was not created by our thread management system. 
    * So we have no record of it. So hijack it. 
    * Do not put it into our ready queue, switch to something else.*/
-
-	
-  assert(!printf("Implement %s",__func__));
+		TCB temp = malloc(sizeof(tcb_t));
+		TCB new = queuePeek(Q);
+  		switch_threads(new, temp);
+		free(temp);
+  //assert(!printf("Implement %s",__func__));
 
 }

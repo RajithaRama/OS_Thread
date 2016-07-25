@@ -8,52 +8,28 @@ machine_switch:
 	# restore all required registred from the new tcb
 	# then when you return, you should get to the new thread 
 
-	movq	(%rdi), %rax
-	addq	$72, %rax
-	pushq	%rax
-
-	subq	$72, %rsp
-	//movq	%rax, -8(%rsp)
-	movq    %rbx, 8(%rsp)
-	//movq    %rcx, -24(%rsp)
-	//movq    %rdx, -32(%rsp)
-	//movq 	%rsp, -40(%rsp)
-	movq	%rbp, 16(%rsp)
-	//movq	%rdi, -16(%rsp)
-	//movq 	%r8,  -72(%rsp)
-	//movq    %r9,  -80(%rsp)
-	movq	%r10, 24(%rsp)
-	movq	%r11, 32(%rsp)
-	movq	%r12, 40(%rsp)
-	movq	%r13, 48(%rsp)
-	movq	%r14, 56(%rsp)
-	movq	%r15, 64(%rsp)
-
-	movq	%rsp, (%rsi)
 	
+	push    %rbx
+	push	%rbp
+	push	%r10
+	push	%r11
+	push	%r12
+	push	%r13
+	push	%r14
+	push	%r15
 
+	mov	%rsp, (%rsi)
+		
+	mov	(%rdi), %rsp
 	
-	movq	(%rdi), %rsp
+	pop	%r15	
+	pop	%r14
+	pop	%r13
+	pop    	%r12
+	pop	%r11
+	pop    	%r10
+	pop    	%rbp
+	pop    	%rbx
 	
-
-	//movq	-8(%rsp), %rax
-	movq	8(%rsp), %rbx	
-	//movq    -24(%rsp), %rcx
-	//movq    -32(%rsp), %rdx
-	movq    16(%rsp), %rbp
-	//movq	-56(%rsp), %rsi
-	//movq	-64(%rsp), %rdi
-	//movq	-72(%rsp), %r8
-	//movq    -80(%rsp), %r9
-	movq    24(%rsp), %r10
-	movq    32(%rsp), %r11
-	movq    40(%rsp), %r12
-	movq    48(%rsp), %r13
-	movq    56(%rsp), %r14
-	movq    64(%rsp), %r15
-
-	addq	$72, %rsp
-	
-
 	ret 
 

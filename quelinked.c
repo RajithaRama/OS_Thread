@@ -35,7 +35,7 @@ void enqueue(struct queue * Q, TCB val){
 	node -> next = NULL;
 	struct linkedNode * temp = (Q->front);
 	if(temp != NULL){
-		while((temp->next)==NULL){
+		while((temp->next)!=NULL){
 			temp = temp->next;
 		}
 		temp -> next = node;
@@ -48,7 +48,7 @@ TCB dequeue(struct queue * Q){
 	struct linkedNode * head = (Q->front);
 	if(head==NULL) return NULL;
 	TCB temp = head -> data;
-	Q->front = head->next;
+	Q->front = head -> next;
 	free(head);
 	return temp;
 }
