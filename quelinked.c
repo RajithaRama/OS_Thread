@@ -47,14 +47,19 @@ void enqueue(struct queue * Q, TCB val){
 TCB dequeue(struct queue * Q){
 	struct linkedNode * head = (Q->front);
 	if(head==NULL) return NULL;
-	TCB temp = head -> data;
-	Q->front = head -> next;
-	free(head);
+	//TCB temp = malloc(sizeof(tcb_t));
+	TCB temp = (head -> data);
+	//printf("data old node: %p",head->data);
+	(Q->front) = (head -> next);
+	//printf("data new node: %p",Q->front->data);
+	//free(head);
 	return temp;
 }
 
 TCB queuePeek(struct queue *Q){
-	return (Q->front)->data ; 
+	TCB temp = malloc(sizeof(tcb_t));
+	temp = (Q->front)->data ;
+	return temp; 
 }
 
 int queueIsEmpty(struct queue * Q){

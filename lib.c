@@ -78,7 +78,7 @@ void * malloc_stack()
    */
    void *ptr = malloc(STACK_SIZE + 16);
    if (!ptr) return NULL;
-   ptr = (void *)(((long int)ptr & (-1 << 4)) + 0x10);
+   ptr = (void *)(((long int)ptr & (-1 << 4)) + STACK_SIZE);
    return ptr;
 }
 
